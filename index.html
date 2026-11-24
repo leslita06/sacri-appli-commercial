@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FFFFFF">
+<title>SACRI · Appli du commercial</title>
+<link rel="icon" href="data:,">
+<link rel="preload" href="assets/Inter.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="stylesheet" href="assets/style.css?v=20261124a">
+</head>
+<body>
+<div class="stage">
+  <aside class="aside al">
+    <img src="assets/logo-sacri.png?v=20261124a" alt="SACRI" class="al-logo">
+    <h1>L'appli du commercial</h1>
+    <p>La tournée, le pointage chez le client, le compte rendu dicté en 30 secondes, le débrief juste après le rendez-vous et les demandes des clients poussées sur le téléphone.</p>
+    <p class="demo"><i data-i="info"></i>Données de démonstration</p>
+  </aside>
+
+  <div class="phone" id="phone">
+    <div class="notch" aria-hidden="true"></div>
+    <div class="app">
+      <header class="top">
+        <img src="assets/logo-sacri.png?v=20261124a" alt="SACRI" class="top-logo">
+        <div class="top-t"><p class="who" id="who"></p><p class="when" id="when"></p></div>
+        <span class="demo-p">Démonstration</span>
+      </header>
+
+      <main class="scr" id="scr">
+        <section class="view" id="v-journee"></section>
+        <section class="view" id="v-pointage"></section>
+        <section class="view" id="v-compte-rendu"></section>
+        <section class="view" id="v-debrief"></section>
+        <section class="view" id="v-alertes"></section>
+        <section class="view" id="v-chef"></section>
+        <p class="foot">Données de démonstration. Seuls les noms des sociétés du groupe SACRI et de leurs marques sont réels ; clients, commerciaux, visites, messages et positions sont inventés.</p>
+      </main>
+
+      <nav class="tabs" aria-label="Écrans">
+        <a href="#journee" data-v="journee"><i data-i="route"></i><span>Journée</span></a>
+        <a href="#pointage" data-v="pointage"><i data-i="map-pin"></i><span>Pointage</span></a>
+        <a href="#compte-rendu" data-v="compte-rendu"><i data-i="mic"></i><span>Compte rendu</span></a>
+        <a href="#debrief" data-v="debrief"><i data-i="lightbulb"></i><span>Débrief</span></a>
+        <a href="#alertes" data-v="alertes"><i data-i="bell-ring"></i><span>Alertes</span><em id="b-al"></em></a>
+        <a href="#chef" data-v="chef"><i data-i="layout"></i><span>Chef</span></a>
+      </nav>
+      <div class="toast" id="toast" role="status"></div>
+    </div>
+  </div>
+
+  <aside class="aside ar">
+    <p class="ar-t">Les six écrans</p>
+    <ol class="ar-l" id="ar-l"></ol>
+    <a class="ar-b" href="https://leslita06.github.io/sacri-tableau-commercial/#terrain" target="_blank" rel="noopener"><i data-i="map"></i>Vue « Terrain » du tableau commercial</a>
+  </aside>
+</div>
+
+<script src="assets/icons.js?v=20261124a"></script>
+<script src="assets/data.js?v=20261124a"></script>
+<script src="assets/terrain.js?v=20261124a"></script>
+<script src="assets/app.js?v=20261124a"></script>
+</body>
+</html>
