@@ -270,7 +270,7 @@ document.addEventListener("click",function(e){
   if(a==="mic"){
     if(state.rec){stopRec();render();return;}
     state.rec=true;render();
-    try{audio=audio||new Audio("assets/note-vocale.mp3?v=20261125c");audio.currentTime=0;audio.play().catch(function(){});audio.onended=function(){stopRec();render();toast("Compte rendu rangé.","circle-check-big");};}catch(x){}
+    try{audio=audio||new Audio("assets/note-vocale.mp3?v=20261125e");audio.currentTime=0;audio.play().catch(function(){});audio.onended=function(){stopRec();render();toast("Compte rendu rangé.","circle-check-big");};}catch(x){}
     var s=0;tick=setInterval(function(){s++;var t=$("tm");if(t)t.textContent="0:"+(s<10?"0":"")+s;if(s>=29){stopRec();render();toast("Compte rendu rangé.","circle-check-big");}},1000);
   }
 });
