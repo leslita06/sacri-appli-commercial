@@ -152,7 +152,7 @@ function vRelances(){
 /* =========== APPLI DU CHEF DES VENTES =========== */
 function teamStrip(sel,attr){
   return '<div class="team">'+COMS.map(function(c){var vs=TODAY.filter(function(v){return v.com===c;});
-    return '<button class="tm'+(sel!=="tous"&&sel!==c?" off":"")+'" data-'+attr+'="'+(sel===c?"tous":c)+'">'+av(c,"s")+"<span>"+esc(c)+'</span><span class="d">'+vs.map(function(v){return '<i style="background:'+(v.pt==="ok"?"#10B981":v.pt==="loin"?"#F59E0B":"#EF4444")+'"></i>';}).join("")+"</span></button>";}).join("")+"</div>";
+    return '<button class="tm'+(sel!=="tous"&&sel!==c?" off":"")+'" data-'+attr+'="'+(sel===c?"tous":c)+'">'+av(c,"av-s")+"<span>"+esc(c)+'</span><span class="d">'+vs.map(function(v){return '<i style="background:'+(v.pt==="ok"?"#10B981":v.pt==="loin"?"#F59E0B":"#EF4444")+'"></i>';}).join("")+"</span></button>";}).join("")+"</div>";
 }
 /* 6. Carte de l'équipe */
 function vChef(){
@@ -162,7 +162,7 @@ function vChef(){
   h+='<div id="m-chef" class="map"></div>';
   h+='<div class="legend"><span><i style="background:#10B981"></i>Pointée</span><span><i style="background:#fff;box-shadow:0 0 0 2px #F59E0B"></i>Hors zone</span><span><i style="background:#fff;box-shadow:0 0 0 2px #EF4444"></i>Non pointée</span></div>';
   h+='<div class="kpis"><div class="kpi"><span class="kv">'+vs.length+'</span><span class="kl">'+ic("route")+'Visites</span></div><div class="kpi"><span class="kv" style="color:#10B981">'+ok+'</span><span class="kl">'+ic("circle-check-big")+'Pointées</span></div><div class="kpi a"><span class="kv">'+(vs.length-ok)+'</span><span class="kl">'+ic("triangle-alert")+"À vérifier</span></div></div>";
-  h+=vs.sort(function(a,b){return a.h1<b.h1?-1:1;}).map(function(v){return '<div class="card row">'+av(v.com,"s")+'<div class="sp"><p class="t">'+esc(v.client)+'</p><p class="s">'+ic("clock")+hh(v.h1)+" · "+esc(v.zone)+"</p></div>"+(v.pt==="ok"?'<span class="pill g">'+ic("map-pin")+v.d+" m</span>":v.pt==="loin"?'<span class="pill a">'+ic("map-pin")+fr(v.d,1)+" km</span>":'<span class="pill r">'+ic("x")+"Non pointé</span>")+"</div>";}).join("");
+  h+=vs.sort(function(a,b){return a.h1<b.h1?-1:1;}).map(function(v){return '<div class="card row">'+av(v.com,"av-s")+'<div class="sp"><p class="t">'+esc(v.client)+'</p><p class="s">'+ic("clock")+hh(v.h1)+" · "+esc(v.zone)+"</p></div>"+(v.pt==="ok"?'<span class="pill g">'+ic("map-pin")+v.d+" m</span>":v.pt==="loin"?'<span class="pill a">'+ic("map-pin")+fr(v.d,1)+" km</span>":'<span class="pill r">'+ic("x")+"Non pointé</span>")+"</div>";}).join("");
   return h;
 }
 function drawChef(){
@@ -175,7 +175,7 @@ function drawChef(){
   var P=items.map(function(o){return m.latLngToContainerPoint(o.ll);});
   for(var it=0;it<60;it++){var mv=false;
     for(var a=0;a<P.length;a++)for(var b=a+1;b<P.length;b++){var dx=P[b].x-P[a].x,dy=P[b].y-P[a].y,d=Math.hypot(dx,dy);
-      if(d<34){if(d<0.5){dx=1;dy=0.3;d=1;}var k=(34-d)/2;P[a].x-=dx/d*k;P[a].y-=dy/d*k;P[b].x+=dx/d*k;P[b].y+=dy/d*k;mv=true;}}
+      if(d<42){if(d<0.5){dx=1;dy=0.3;d=1;}var k=(42-d)/2;P[a].x-=dx/d*k;P[a].y-=dy/d*k;P[b].x+=dx/d*k;P[b].y+=dy/d*k;mv=true;}}
     if(!mv)break;}
   items.forEach(function(o,j){var q=m.containerPointToLatLng(P[j]);o.q=q;
     if(P[j].distanceTo(m.latLngToContainerPoint(o.ll))>3)L.polyline([o.ll,q],{color:"#64748B",weight:1,opacity:.7}).addTo(m);
@@ -190,7 +190,7 @@ function vRapports(){
   h+=teamStrip(state.cc,"cc");
   h+='<div class="card row"><div class="gauge">'+ring(ab,at,"#F59E0B",64,at?Math.round(ab/at*100)+"%":"–")+'</div><div class="sp"><p class="t">Sujets attendus abordés</p><p class="s">'+ab+" sur "+at+" · "+pl(vs.length,"compte rendu")+"</p></div></div>";
   h+=vs.length?vs.map(function(v){var col=v.sc==null?"#94A3B8":v.sc>=7?"#10B981":v.sc>=5?"#F59E0B":"#EF4444";
-    return '<div class="card"><div class="row">'+av(v.com,"s")+'<div class="sp"><p class="t">'+esc(v.client)+'</p><p class="s">'+ic("clock")+hh(v.h2)+" · "+esc(v.zone)+"</p></div>"+ring(v.sc==null?0:v.sc,10,col,42,v.sc==null?"–":v.sc)+'</div><div class="tags">'+(v.abs?'<span class="pill r">'+ic("user-x")+"Absent</span>":"")+v.ab.map(function(x){return '<span class="pill g" title="'+esc(SUJ[x])+'">'+ic(SICO[x])+"</span>";}).join("")+v.na.map(function(x){return '<span class="pill r" title="'+esc(SUJ[x])+'">'+ic(SICO[x])+"</span>";}).join("")+'</div><p class="s" style="margin-top:8px;white-space:normal">'+ic("arrow-right")+esc(v.next)+"</p></div>";}).join(""):empty("message-square-text","Pas encore de compte rendu","Ils arrivent après chaque visite.");
+    return '<div class="card"><div class="row">'+av(v.com,"av-s")+'<div class="sp"><p class="t">'+esc(v.client)+'</p><p class="s">'+ic("clock")+hh(v.h2)+" · "+esc(v.zone)+"</p></div>"+ring(v.sc==null?0:v.sc,10,col,42,v.sc==null?"–":v.sc)+'</div><div class="tags">'+(v.abs?'<span class="pill r">'+ic("user-x")+"Absent</span>":"")+v.ab.map(function(x){return '<span class="pill g" title="'+esc(SUJ[x])+'">'+ic(SICO[x])+"</span>";}).join("")+v.na.map(function(x){return '<span class="pill r" title="'+esc(SUJ[x])+'">'+ic(SICO[x])+"</span>";}).join("")+'</div><p class="s" style="margin-top:8px;white-space:normal">'+ic("arrow-right")+esc(v.next)+"</p></div>";}).join(""):empty("message-square-text","Pas encore de compte rendu","Ils arrivent après chaque visite.");
   h+='<div class="legend" style="margin-top:4px"><span><i style="background:#10B981"></i>Abordé</span><span><i style="background:#EF4444"></i>Oublié</span>'+Object.keys(SICO).map(function(k){return "<span>"+ic(SICO[k])+esc(SUJ[k].split(" ")[0])+"</span>";}).join("")+"</div>";
   return h;
 }
@@ -223,9 +223,9 @@ function vAlertesChef(){
   var du=dues(),lt=du.filter(function(d){return d.prev<T.jour;}).length;
   h+='<div class="kpis"><div class="kpi"><span class="kv">'+du.length+'</span><span class="kl">'+ic("file-text")+'Relances</span></div><div class="kpi r"><span class="kv">'+lt+'</span><span class="kl">'+ic("hourglass")+'En retard</span></div><div class="kpi r"><span class="kv">'+nv.length+'</span><span class="kl">'+ic("user-x")+'Non vus</span></div></div>';
   h+='<div class="sect">'+ic("user-x")+'Clients non vus<span class="pill r">'+nv.length+"</span></div>";
-  h+='<div class="card">'+nv.map(function(p){var k=since(p.lv);return '<div class="al">'+av(p.com,"s")+'<div class="sp"><p class="t">'+esc(p.client)+'</p><p class="s">'+ic("map-pin")+esc(p.zone)+'</p></div><span class="pill r">'+(k===null?"Jamais":k+" j")+"</span></div>";}).join("")+"</div>";
+  h+='<div class="card">'+nv.map(function(p){var k=since(p.lv);return '<div class="al">'+av(p.com,"av-s")+'<div class="sp"><p class="t">'+esc(p.client)+'</p><p class="s">'+ic("map-pin")+esc(p.zone)+'</p></div><span class="pill r">'+(k===null?"Jamais":k+" j")+"</span></div>";}).join("")+"</div>";
   h+='<div class="sect">'+ic("map-pin")+'Visites à vérifier<span class="pill a">'+bad.length+"</span></div>";
-  h+='<div class="card">'+bad.map(function(v){return '<div class="al">'+av(v.com,"s")+'<div class="sp"><p class="t">'+esc(v.client)+'</p><p class="s">'+ic("calendar")+cap(longD(v.j).split(" ").slice(0,2).join(" "))+" · "+hh(v.h1)+"</p></div>"+(v.pt==="loin"?'<span class="pill a">'+fr(v.d,1)+" km</span>":'<span class="pill r">Non pointé</span>')+"</div>";}).join("")+"</div>";
+  h+='<div class="card">'+bad.map(function(v){return '<div class="al">'+av(v.com,"av-s")+'<div class="sp"><p class="t">'+esc(v.client)+'</p><p class="s">'+ic("calendar")+cap(longD(v.j).split(" ").slice(0,2).join(" "))+" · "+hh(v.h1)+"</p></div>"+(v.pt==="loin"?'<span class="pill a">'+fr(v.d,1)+" km</span>":'<span class="pill r">Non pointé</span>')+"</div>";}).join("")+"</div>";
   return h;
 }
 
@@ -270,7 +270,7 @@ document.addEventListener("click",function(e){
   if(a==="mic"){
     if(state.rec){stopRec();render();return;}
     state.rec=true;render();
-    try{audio=audio||new Audio("assets/note-vocale.mp3?v=20261125b");audio.currentTime=0;audio.play().catch(function(){});audio.onended=function(){stopRec();render();toast("Compte rendu rangé.","circle-check-big");};}catch(x){}
+    try{audio=audio||new Audio("assets/note-vocale.mp3?v=20261125c");audio.currentTime=0;audio.play().catch(function(){});audio.onended=function(){stopRec();render();toast("Compte rendu rangé.","circle-check-big");};}catch(x){}
     var s=0;tick=setInterval(function(){s++;var t=$("tm");if(t)t.textContent="0:"+(s<10?"0":"")+s;if(s>=29){stopRec();render();toast("Compte rendu rangé.","circle-check-big");}},1000);
   }
 });
