@@ -85,15 +85,29 @@ function mapSvg(v){
   s+='<path d="M0 '+(cy+34)+" C 90 "+(cy+10)+", 200 "+(cy+70)+", "+W+" "+(cy+40)+'" stroke="#E4E4E0" stroke-width="7" fill="none"/>';
   s+='<path d="M'+(cx-120)+' 0 L '+(cx-60)+" "+H+'" stroke="#E4E4E0" stroke-width="5" fill="none"/>';
   s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+Math.max(r,7)+'" fill="rgba(24,121,78,.08)" stroke="#18794E" stroke-dasharray="3 3"/>';
-  s+='<circle cx="'+cx+'" cy="'+cy+'" r="5" fill="#111"/><text x="'+(cx+9)+'" y="'+(cy-8)+'" font-size="11" font-family="Inter" fill="#3D3D3D">Adresse du client</text>';
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="5" fill="#111"/>';
+  var lb=[],px=null,py=null;
   if(v.pt!=="non"){
-    var b=(v.pt==="loin"?62:50)*Math.PI/180,px=cx+dm*k*Math.sin(b),py=cy-dm*k*Math.cos(b);
+    var b=(v.pt==="loin"?62:50)*Math.PI/180;px=cx+dm*k*Math.sin(b);py=cy-dm*k*Math.cos(b);
     if(v.pt==="loin"){px=cx-dm*k*Math.sin(b);py=cy-dm*k*Math.cos(b);}
     var col=v.pt==="ok"?"#18794E":"#E5A100";
     if(v.pt==="loin"){s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+px+'" y2="'+py+'" stroke="#9A6100" stroke-dasharray="4 4"/><text x="'+((cx+px)/2+8)+'" y="'+((cy+py)/2-8)+'" font-size="11" font-weight="600" font-family="Inter" fill="#9A6100">'+fr(v.d,1)+" km</text>";}
     s+='<circle cx="'+px+'" cy="'+py+'" r="9" fill="'+col+'" fill-opacity=".18"/><circle cx="'+px+'" cy="'+py+'" r="5" fill="'+col+'" stroke="#fff" stroke-width="1.5"/>';
-    s+='<text x="'+(v.pt==="loin"?px-8:px)+'" y="'+(v.pt==="loin"?py-14:py+20)+'" font-size="11" font-family="Inter" fill="#3D3D3D" text-anchor="'+(v.pt==="loin"?"start":"middle")+'">Votre position</text>';
   }
+  /* Étiquettes : client au-dessus à droite, position en dessous à gauche, 8 px d'écart, fond blanc */
+  var G=8,LH=18,dots=[{x:cx,y:cy,r:5}];if(px!==null)dots.push({x:px,y:py,r:9});
+  function clear(bx,by,bw,d){var nx=Math.max(bx,Math.min(d.x,bx+bw)),ny=Math.max(by,Math.min(d.y,by+LH));return Math.hypot(d.x-nx,d.y-ny)>=d.r+G;}
+  function place(t,w,d,up,other){var bw=w+8,bx=up?d.x+d.r+G:d.x-d.r-G-bw,by=up?d.y-d.r-G-LH:d.y+d.r+G,by0=by;
+    bx=Math.max(4,Math.min(W-4-bw,bx));
+    var obst=dots.concat(lb.map(function(l){return {box:l};}));
+    for(var i=0;i<80;i++){var ok=dots.every(function(o){return clear(bx,by,bw,o);})&&lb.every(function(l){return bx+bw+4<l.x||bx>l.x+l.w+4||by+LH+4<l.y||by>l.y+LH+4;});if(ok)break;by+=up?-1:1;}
+    by=Math.max(2,Math.min(H-34-LH,by));
+    var L={t:t,x:bx,y:by,w:bw,lead:Math.abs(by-by0)>4,d:d,up:up};lb.push(L);return L;}
+  place("Adresse du client",91,dots[0],true);
+  if(px!==null)place("Votre position",72,dots[1],false);
+  lb.forEach(function(L){var d=L.d,col=L.t==="Votre position"?"#6B6B6B":"#111";
+    if(L.lead){var ey=L.up?L.y+LH-4:L.y+4,ex=L.up?L.x:L.x+L.w;s+='<path d="M'+d.x+" "+(L.up?d.y-d.r-2:d.y+d.r+2)+" L "+d.x+" "+ey+" L "+ex+" "+ey+'" stroke="'+col+'" stroke-width="1" fill="none" opacity=".55"/>';}
+    s+='<rect class="lbl" x="'+L.x+'" y="'+L.y+'" width="'+L.w+'" height="'+LH+'" rx="4" fill="#FFFFFF" fill-opacity=".85"/><text class="lbl-t" x="'+(L.x+4)+'" y="'+(L.y+13)+'" font-size="11" font-family="Inter" fill="#3D3D3D">'+L.t+"</text>";});
   var bar=v.pt==="loin"?1000:100;
   s+='<line x1="14" y1="'+(H-14)+'" x2="'+(14+bar*k)+'" y2="'+(H-14)+'" stroke="#6B6B6B" stroke-width="2"/><text x="14" y="'+(H-20)+'" font-size="10" font-family="Inter" fill="#6B6B6B">'+(v.pt==="loin"?"1 km":"100 m")+"</text></svg>";
   return s;
